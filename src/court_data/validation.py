@@ -1,49 +1,43 @@
-from datetime import datetime
+from collections.abc import Iterable, Mapping
+from datetime import date
+from typing import TypedDict
 
 
-def validate_case_record(record):
-    required_fields = [
-        "case_id",
-        "case_title",
-        "decision_date",
-    ]
+class ValidationResult(TypedDict):
+    valid: bool
+    errors: list[str]
 
-    errors = []
 
-    for field in required_fields:
+def validate_case_record(record: Mapping[str, object]) -> ValidationResult:
+    errors: list[str] = []
+    for field in ("case_id", "case_title", "decision_date"):
         value = record.get(field)
-
-        if value is None or (
-            isinstance(value, str) and not value.strip()
-        ):
+        if value is None or (isinstance(value, str) and not value.strip()):
             errors.append(f"Missing required field: {field}")
+        elif not isinstance(value, str):
+            errors.append(f"{field} must be a string")
 
     date_value = record.get("decision_date")
-
-    if date_value:
+    if isinstance(date_value, str) and date_value.strip():
         try:
-            datetime.strptime(str(date_value), "%Y-%m-%d")
+            parsed = date.fromisoformat(date_value)
+            if parsed.isoformat() != date_value:
+                raise ValueError
         except ValueError:
-            errors.append(
-                "decision_date must use YYYY-MM-DD format"
-            )
+            errors.append("decision_date must use YYYY-MM-DD format")
 
-    return {
-        "valid": len(errors) == 0,
-        "errors": errors,
-    }
+    return {"valid": not errors, "errors": errors}
 
 
-def find_duplicate_cases(records):
-    seen = set()
-    duplicates = []
-
+def find_duplicate_cases(records: Iterable[Mapping[str, object]]) -> list[str]:
+    seen: set[str] = set()
+    duplicates: list[str] = []
     for record in records:
         case_id = record.get("case_id")
-
+        if not isinstance(case_id, str) or not case_id.strip():
+            continue
         if case_id in seen:
             duplicates.append(case_id)
         else:
             seen.add(case_id)
-
     return duplicates

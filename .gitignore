@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+.security-tools/
+/BACKEND_TASK.md
+/BYOP_PROJECT_GUIDELINES.md

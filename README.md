@@ -36,7 +36,7 @@ The repository currently includes:
 
 The standalone data-processing application, database integration, and search interface are planned enhancements.
 
-The proposed development will focus on conventional software engineering and data processing, not AI model development.
+The proposed development focuses on conventional software engineering and data processing.
 
 ## Planned Features
 
@@ -201,13 +201,13 @@ The application will allow users to:
 
 ## Testing
 
-Once the test suite is implemented:
+Run the validation test suite:
 
 ```bash
 pytest
 ```
 
-Tests will cover:
+Planned application coverage includes:
 
 - File ingestion
 - Invalid input handling
@@ -237,7 +237,6 @@ The planned development focuses on:
 - Automated testing
 - Documentation
 
-AI model training, fine-tuning, evaluation, benchmarking, and inference are outside the proposed development scope.
 
 ## Future Improvements
 
@@ -291,3 +290,14 @@ with defined objectives, scope and acceptance criteria.
 
 Tests use synthetic data and local or mocked dependencies
 where applicable.
+
+## Local backend task
+
+The next bounded task is a local SQLite repository for validated synthetic
+records, with insert, exact-ID lookup and paginated listing. Integration tests
+will verify persistence, duplicate rejection, rollback and parameterized queries
+using isolated temporary databases.
+
+Validation currently requires nonempty text fields and canonical calendar dates
+(`YYYY-MM-DD`). Duplicate detection skips missing or invalid identifiers and
+reports each repeated occurrence of an exact case ID.
